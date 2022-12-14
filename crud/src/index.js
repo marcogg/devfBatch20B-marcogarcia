@@ -1,5 +1,7 @@
 const d = document;
 
+const { v4: uuidv4 } = require("uuid");
+
 // Capturando los nodos de html con javascript
 const app = d.querySelector(".app");
 
@@ -28,10 +30,10 @@ const printTask = (task, id) => {
   btn_2.classList.add("btn-delete");
 
   btn_1.addEventListener("click", () => {
-    console.log("Editando....");
+    putData(id, input_todo.value);
   });
   btn_2.addEventListener("click", () => {
-    console.log("Eliminando....");
+    deleteData(id);
   });
 
   p.appendChild(taskText);
@@ -46,5 +48,89 @@ const printTask = (task, id) => {
   return { id, task };
 };
 
-printTask("Tender la cama", 1);
-printTask("Cepillarme los dientes", 2);
+// Funcion que obtiene datos de la api
+const getData = async () => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    data.forEach((element) => {
+      printTask(element.task, element.id);
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+// Funcion que envia datos a la api
+const postData = async (task) => {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: uuidv4(),
+        task: task,
+      }),
+    });
+    const data = response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+// Funcion que edita datos a la api
+const putData = async (id, task) => {
+  try {
+    const response = await fetch(`${url}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        task: task,
+      }),
+    });
+
+    const data = response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+// Funcion que elimina datos a la api
+const deleteData = async (id) => {
+  try {
+    const response = await fetch(`${url}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+// Cargo los datos al momento de cargar el documento
+d.addEventListener("DOMContentLoaded", getData);
+
+// logica del boton de añadir una tarea
+btn_add.addEventListener("click", () => {
+  return postData(input_todo.value);
+});

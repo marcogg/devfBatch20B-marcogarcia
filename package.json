@@ -2,7 +2,6 @@
   "name": "devfbatch20b",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "up:json-s": "json-server ./crud/models/db.json"
   },
@@ -19,6 +18,7 @@
   "homepage": "https://github.com/kikemaya/devfBatch20B#readme",
   "description": "",
   "dependencies": {
+    "uuid": "^9.0.0",
     "xmlhttprequest": "^1.8.0"
   }
 }
