@@ -1,7 +1,10 @@
 "use strict";
 
+// CALLBACK HELL
+
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const url = "https://pokeapi.co/api/v2/pokemon/pikachu";
+const url2 = "https://pokeapi.co/api/v2/pokemon/squirtle";
 
 function getData(url, callback) {
   let xhttp = new XMLHttpRequest();
@@ -20,6 +23,21 @@ function getData(url, callback) {
   xhttp.send();
 }
 
-getData(url, (data, error) => {
+function getVamoACalmarno(data, error) {
   console.log(data, error);
+}
+
+getData(url, (data, error) => {
+  console.log(data.forms[0].name, error);
+  getData(url2, (data, error) => getVamoACalmarno(data.forms[0].name, error));
+  getData(url, (data, error) => {
+    console.log(data.forms[0].name, error);
+    getData(url2, (data, error) => getVamoACalmarno(data.forms[0].name, error));
+    getData(url, (data, error) => {
+      console.log(data.forms[0].name, error);
+      getData(url2, (data, error) =>
+        getVamoACalmarno(data.forms[0].name, error)
+      );
+    });
+  });
 });
